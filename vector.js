@@ -6,7 +6,7 @@ class Vector{
 	};
 	plus(v){
 		if(v.constructor !== Vector) 
-			throw "Ошибка приведения типов, переданный объект не является вектором типа Vector";
+			throw "Ошибка пприведения типов, переданный объект не является вектором типа Vector";
 		let sum = new Vector(this.x + v.x, this.y+ v.y);
 		return sum;
 	};
