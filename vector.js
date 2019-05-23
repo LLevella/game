@@ -1,13 +1,13 @@
 'use strict';
 class Vector{
 	constructor( x = 0, y = 0){
-		this.x = x;
-		this.y = y;
+		this.x = Math.round(x);
+		this.y = Math.round(y);
 	};
 	plus(v){
 		if(v.constructor !== Vector) 
-			throw "Ошибка пприведения типов, переданный объект не является вектором типа Vector";
-		let sum = new Vector(this.x + v.x, this.y+ v.y);
+			throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
+		let sum = new Vector(Math.round(this.x + v.x), Math.round(this.y+ v.y));
 		return sum;
 	};
 	times(cft){
