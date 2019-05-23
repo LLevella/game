@@ -6,7 +6,7 @@ class Actor{
 		if(speed == undefined) speed = new Vector(0,0);
 
 		if((position.constructor !== Vector) ||(size.constructor !== Vector)||(speed.constructor !== Vector))
-			throw "Ошибка приведения типов, переданный объект не является вектором типа Vector";
+			throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
 		
 		this.pos = position;
 		this.size = size;
@@ -37,12 +37,14 @@ class Actor{
 	};
 
 	isIntersect(actor){
-		if(actor.constructor !== Actor)
-			throw "Ошибка приведения типов, переданный объект не является движущимся объектом типа Actor";
-	
-  	if(actor === this) return false;
+		if (!(actor instanceof Actor) || !actor) {
+			throw new Error(`В качестве аргумента можно передавать только вектор типа Vector`);
+		}
 
-	 return ((actor.left >= this.left)&& (actor.left < this.right)||(this.left >= actor.left)&& (this.left < actor.right)) &&
-			 ((actor.top >= this.top)&& (actor.top < this.bottom)||(this.top >= actor.top)&& (this.top < actor.bottom));
+		if (actor === this) {
+			return false;
+		}
+
+		return (this.left < actor.right && this.right > actor.left &&	this.bottom > actor.top &&	this.top < actor.bottom);
 	}
 }
