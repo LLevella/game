@@ -1,9 +1,6 @@
 'use strict';
 class Actor{
-	constructor(position, size, speed){
-		if(position == undefined) position = new Vector(0,0);
-		if(size == undefined) size = new Vector(1,1);
-		if(speed == undefined) speed = new Vector(0,0);
+	constructor(position = new Vector(0,0), size = new Vector(1,1), speed = new Vector(0,0)){
 
 		if((position.constructor !== Vector) ||(size.constructor !== Vector)||(speed.constructor !== Vector))
 			throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
