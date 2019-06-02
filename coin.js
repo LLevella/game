@@ -3,7 +3,7 @@ class Coin extends Actor{
   constructor(position){
     super(position,new Vector(0.6,0.6));
     this.pos = this.pos.plus(new Vector(0.2, 0.1));
-    this.basePos = this.pos;
+    this.basePos = this.pos.copy();
     this.springSpeed = 8;
     this.springDist = 0.07;
     this.spring = 2.0*Math.PI*Math.random();

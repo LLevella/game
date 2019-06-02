@@ -66,6 +66,7 @@ class DOMDisplay {
     rect.style.height = actor.size.y * scale + "px";
     rect.style.left = actor.pos.x * scale + "px";
     rect.style.top = actor.pos.y * scale + "px";
+    //if(actor.type == 'player')console.log(rect);
   }
 
   drawActors() {
@@ -227,6 +228,8 @@ function initGameObjects() {
     if (keys.right) this.speed.x += playerXSpeed;
 
     var motion = new Vector(this.speed.x, 0).times(step);
+    // console.log("motion X");
+    // console.log(motion);
     this.move(motion, level);
   };
 
@@ -236,6 +239,8 @@ function initGameObjects() {
 
     var motion = new Vector(0, this.speed.y).times(step);
     this.move(motion, level);
+    // console.log("motion Y");
+    // console.log(motion);
   };
 
   Player.prototype.act = function (step, level, keys) {
@@ -245,6 +250,7 @@ function initGameObjects() {
     var otherActor = level.actorAt(this);
     if (otherActor) {
       level.playerTouched(otherActor.type, otherActor);
+      //console.log('bum');
     }
   };
 }
