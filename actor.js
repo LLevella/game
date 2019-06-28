@@ -26,7 +26,7 @@ class Actor{
   };
 
   get bottom(){
-    return this.pos.plus(this.size).y;
+		return this.pos.plus(this.size).y;
   };
 
   get type(){
