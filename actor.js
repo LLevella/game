@@ -33,16 +33,14 @@ class Actor{
 	};
 
 	get type(){
-		return this;
+		return 'actor';
 	};
 
 	isIntersect(actor){
 		if(actor.constructor !== Actor)
 			throw "Ошибка приведения типов, переданный объект не является движущимся объектом типа Actor";
 		if(actor === this) return false;
-		if(((actor.left > this.left)&& (actor.left < this.right)||(this.left > actor.left)&& (this.left < actor.right)) &&
-			 ((actor.top > this.top)&& (actor.top < this.bottom)||(this.top > actor.top)&& (this.top < actor.bottom)))
-			 return true;
-		return false;
+	 return ((actor.left >= this.left)&& (actor.left < this.right)||(this.left >= actor.left)&& (this.left < actor.right)) &&
+			 ((actor.top >= this.top)&& (actor.top < this.bottom)||(this.top >= actor.top)&& (this.top < actor.bottom));
 	}
 }
