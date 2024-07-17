@@ -29,8 +29,8 @@ class Level{
 			throw "Ошибка приведения типов, переданный объект не является вектором типа Vector";
 
 		let vAfterShift = size.plus(shift);
-		if (vAfterShift.y >= this.height) return 'lava';
-		if(shift.y < 0 || shift.x < 0||vAfterShift.x >= this.width) return 'wall';
+		if (vAfterShift.y > this.height) return 'lava';
+		if(shift.y < 0 || shift.x < 0||vAfterShift.x > this.width) return 'wall';
 
 		for(let y = shift.y; y < vAfterShift.y; y++)
 			for(let x = shift.x; x < Math.min(vAfterShift.x,this.grid[y].length); x++)
@@ -43,9 +43,8 @@ class Level{
 	}
 
 	noMoreActors(aType){
+    if (!this.actors) return true
     return (this.actors.findIndex(elem => (elem.type === aType))<0)
-
-
 	}
 
 	playerTouched(aType, actor){
