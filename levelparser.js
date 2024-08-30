@@ -5,7 +5,7 @@ class LevelParser{
 	}
 
 	actorFromSymbol(key){
-		if (key in dict) return dict[key];
+		if (key in this.dict) return this.dict[key];
 	}
 
 	obstacleFromSymbol(letter){
@@ -15,8 +15,8 @@ class LevelParser{
 	createGrid(astr = []){
 		return astr.map( 
 			str => [].map.call(str, 
-				letter => { 
-					if((letter in gameKeys)&&(!gameKeys[letter].canMove)) return letter
+				function(letter){ 
+					if((letter in gameKeys)&&(!gameKeys[letter].canMove)) return gameKeys[letter].key
 				}
 			)
 		)
