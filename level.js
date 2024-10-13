@@ -17,27 +17,30 @@ class Level{
 		return ((this.status !== null) && (this.finishDelay < 0));
 	}
 	
-	actorAt(actor){
-		if(actor == undefined) 
-			throw "Ошибка приведения типов, передан пустой объект";
-		if(actor.constructor !== Actor) 
-			throw "Ошибка приведения типов, переданный объект не является движущимся объектом типа Actor";
+	actorAt(actor) {
+		if (!(actor instanceof Actor) || !actor) {
+			throw new Error("Ошибка приведения типов, переданный объект не является движущимся объектом типа Actor");
+		}
+		if (!this.actors) 
+			return undefined;
+	
 		return this.actors.find(elem => elem.isIntersect(actor));
+		
 	}
 
 	obstacleAt (shift, size){
 		if((shift.constructor !== Vector) ||(size.constructor !== Vector))
-			throw "Ошибка приведения типов, переданный объект не является вектором типа Vector";
+			throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
 		let vAfterShift = size.plus(shift);
-		if (vAfterShift.y >= this.height) return 'lava';
-		if(shift.y < 0 || shift.x < 0||vAfterShift.x >= this.width) return 'wall';
+		if(shift.y < 0 || shift.x < 0||vAfterShift.x > this.width) return 'wall';
+		if (vAfterShift.y > this.height) return 'lava';
 		for(let y = shift.y; y < vAfterShift.y; y++)
-			for(let x = shift.x; x < Math.min(vAfterShift.x,this.grid[y].length); x++)
+			for(let x = shift.x; x < vAfterShift.x; x++)
 				return this.grid[y][x];
 	}
 
 	removeActor(actor){
-		if((actor === undefined) || (actor.constructor !== Actor)) return;
+		//if((actor === undefined) || (actor.constructor !== Actor)) return;
 	
 		let ind = this.actors.indexOf(actor);
 		if (ind > -1) this.actors.splice(ind, 1);
@@ -56,7 +59,7 @@ class Level{
 			this.status = 'lost';
 			return
 		}
-		if((aType === 'coin') && (actor.type = 'coin' )){
+		if((aType === 'coin') && (actor.type === 'coin' )){
 			this.removeActor(actor);
 			if(this.noMoreActors(aType))
 				this.status = 'won';
