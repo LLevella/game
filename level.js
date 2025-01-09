@@ -32,10 +32,10 @@ class Level{
 		if((shift.constructor !== Vector) ||(size.constructor !== Vector))
 			throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
 		let vAfterShift = size.plus(shift);
-		if(shift.y < 0 || shift.x < 0||vAfterShift.x > this.width) return 'wall';
-		if (vAfterShift.y > this.height) return 'lava';
-		for(let y = shift.y; y < vAfterShift.y; y++)
-			for(let x = shift.x; x < vAfterShift.x; x++)
+		if( Math.round(shift.y) < 0 || Math.round(shift.x) < 0|| Math.round(vAfterShift.x) > this.width) return 'wall';
+		if ( Math.round(vAfterShift.y) > this.height) return 'lava';
+		for(let y = Math.round(shift.y); y < Math.round(vAfterShift.y); y++)
+			for(let x = Math.round(shift.x); x < Math.round(vAfterShift.x); x++)
 				return this.grid[y][x];
 	}
 
