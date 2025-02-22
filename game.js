@@ -26,7 +26,7 @@ function startGame(){
 			let levels = JSON.parse(json)
 			const parser = new LevelParser(actorDict);
 			runGame(levels, parser, DOMDisplay)
-				.then(() => console.log( "Игра окончена" ));
+				.then(() => alert( "Игра окончена" ));
 		}
 	)
 }
