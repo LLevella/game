@@ -11,12 +11,13 @@ class Vector{
     return sum;
   };
   times(cft){
+    //console.log("this=",this);
     let v = new Vector(this.x * cft, this.y * cft);
+    //console.log("v=",v);
     return v;
   };
-  
-  // copy(){
-  //   let v = new Vector(this.x, this.y);
-  //   return v;
-  // }
+  copy(){
+    let v = new Vector(this.x, this.y);
+    return v;
+  }
 }
