@@ -66,7 +66,10 @@ class DOMDisplay {
     rect.style.height = actor.size.y * scale + "px";
     rect.style.left = actor.pos.x * scale + "px";
     rect.style.top = actor.pos.y * scale + "px";
-    //if(actor.type == 'player')console.log(rect);
+    if(actor.type == 'player'){
+			console.log("updateActor");
+			console.log(rect);
+		}
   }
 
   drawActors() {

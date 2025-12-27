@@ -31,13 +31,18 @@ class Level{
   obstacleAt (shift, size){
     if((shift.constructor !== Vector) ||(size.constructor !== Vector))
       throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
+			
     let vAfterShift = size.plus(shift);
     console.log(shift, vAfterShift);
-    if( Math.floor(shift.y) < 0 || Math.floor(shift.x) < 0|| Math.ceil(vAfterShift.x) > this.width) return 'wall';
+		
+		if( Math.floor(shift.y) < 0 || Math.floor(shift.x) < 0|| Math.ceil(vAfterShift.x) > this.width) return 'wall';
     if ( Math.ceil(vAfterShift.y) > this.height) return 'lava';
-    for(let y = Math.floor(shift.y); y < Math.ceil(vAfterShift.y); y++)
+		
+		for(let y = Math.floor(shift.y); y < Math.ceil(vAfterShift.y); y++)
       for(let x =Math.floor(shift.x); x < Math.ceil(vAfterShift.x); x++)
-        return this.grid[y][x];
+					if (this.grid[y][x] !== undefined)
+						return this.grid[y][x];
+					
   }
 
   removeActor(actor){
