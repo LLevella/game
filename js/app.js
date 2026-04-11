@@ -3,15 +3,13 @@
 function loadLevels() {
   return new Promise((done, fail) => {
     const xhr = new XMLHttpRequest();
-    let url = './levels.json';
-    if (location.hostname !== 'localhost') {
-      url = 'https://neto-api.herokuapp.com/js/diplom/levels.json';
-    }
+    const url = './levels.json';
     xhr.open('GET', url);
     xhr.addEventListener('error', e => fail(xhr));
     xhr.addEventListener('load', e => {
-      if (xhr.status !== 200) {
+      if (xhr.status !== 0 && (xhr.status < 200 || xhr.status >= 300)) {
         fail(xhr);
+        return;
       }
       done(xhr.responseText);
     });
@@ -66,10 +64,6 @@ class DOMDisplay {
     rect.style.height = actor.size.y * scale + "px";
     rect.style.left = actor.pos.x * scale + "px";
     rect.style.top = actor.pos.y * scale + "px";
-    if(actor.type == 'player'){
-			console.log("updateActor");
-			console.log(rect);
-		}
   }
 
   drawActors() {
@@ -136,13 +130,17 @@ function trackKeys(codes) {
   var pressed = Object.create(null);
   function handler(event) {
     if (codes.hasOwnProperty(event.keyCode)) {
-      var down = event.type == "keydown";
+      var down = event.type === "keydown";
       pressed[codes[event.keyCode]] = down;
       event.preventDefault();
     }
   }
   addEventListener("keydown", handler);
   addEventListener("keyup", handler);
+  pressed.unregister = function() {
+    removeEventListener("keydown", handler);
+    removeEventListener("keyup", handler);
+  };
   return pressed;
 }
 
@@ -171,6 +169,7 @@ function runLevel(level, Display) {
       level.act(step, arrows);
       display.drawFrame(step);
       if (level.isFinished()) {
+        arrows.unregister();
         display.clear();
         done(level.status);
         return false;
@@ -206,20 +205,14 @@ function initGameObjects() {
     }
   };
 
-  Player.prototype.handleObstacle = function (obstacle) {
-    if (this.wontJump) {
-      this.speed.y = -jumpSpeed;
-    } else {
-      this.speed.y = 0;
-    }
-  };
-
-  Player.prototype.move = function (motion, level) {
+  Player.prototype.move = function (motion, level, onObstacle) {
     var newPos = this.pos.plus(motion);
     var obstacle = level.obstacleAt(newPos, this.size);
     if (obstacle) {
       level.playerTouched(obstacle);
-      this.handleObstacle(obstacle);
+      if (onObstacle) {
+        onObstacle.call(this, obstacle);
+      }
     } else {
       this.pos = newPos;
     }
@@ -231,19 +224,22 @@ function initGameObjects() {
     if (keys.right) this.speed.x += playerXSpeed;
 
     var motion = new Vector(this.speed.x, 0).times(step);
-    // console.log("motion X");
-    // console.log(motion);
-    this.move(motion, level);
+    this.move(motion, level, function() {
+      this.speed.x = 0;
+    });
   };
 
   Player.prototype.moveY = function (step, level, keys) {
     this.speed.y += step * gravity;
-    this.wontJump = keys.up && this.speed.y > 0;
 
     var motion = new Vector(0, this.speed.y).times(step);
-    this.move(motion, level);
-    // console.log("motion Y");
-    // console.log(motion);
+    this.move(motion, level, function(obstacle) {
+      if (keys.up && this.speed.y > 0 && obstacle !== 'lava') {
+        this.speed.y = -jumpSpeed;
+      } else {
+        this.speed.y = 0;
+      }
+    });
   };
 
   Player.prototype.act = function (step, level, keys) {
@@ -253,7 +249,6 @@ function initGameObjects() {
     var otherActor = level.actorAt(this);
     if (otherActor) {
       level.playerTouched(otherActor.type, otherActor);
-      //console.log('bum');
     }
   };
 }
@@ -263,7 +258,7 @@ function runGame(plans, Parser, Display) {
     function startLevel(n) {
       runLevel(Parser.parse(plans[n]), Display)
         .then(status => {
-          if (status == "lost") {
+          if (status === "lost") {
             startLevel(n);
           } else if (n < plans.length - 1) {
             startLevel(n + 1);

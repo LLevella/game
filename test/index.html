@@ -11,6 +11,8 @@
   <div id="mocha"></div>
 
   <script>
+    window.__GAME_DISABLE_AUTOSTART__ = true;
+
     function loadLevels() {
       return Promise.reject();
     }
@@ -28,6 +30,7 @@
   <script src="../fireball.js"></script>
   <script src="../coin.js"></script>
   <script src="../player.js"></script>
+  <script src="../js/app.js"></script>
   <script src="../game.js"></script>
 
   <script src="http://chaijs.com/chai.js"></script>
@@ -44,6 +47,7 @@
   <script src="./firerain.spec.js"></script>
   <script src="./coin.spec.js"></script>
   <script src="./player.spec.js"></script>
+  <script src="./movement.spec.js"></script>
   <script>
     const expect = chai.expect;
     //mocha.checkLeaks();

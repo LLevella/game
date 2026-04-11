@@ -22,16 +22,25 @@ const actorDict = {
 
 function startGame(){
   loadLevels()
-    .then( (json) => {
-      let levels = JSON.parse(json)
+    .then((json) => {
+      const levels = JSON.parse(json);
       const parser = new LevelParser(actorDict);
-      runGame(levels, parser, DOMDisplay)
-        .then(() => alert( "Игра окончена" ));
-    }
-  )
+      return runGame(levels, parser, DOMDisplay);
+    })
+    .then(() => alert("Игра окончена"))
+    .catch(() => alert("Не удалось загрузить уровни"));
 }
 
-window.onload = function(){
-  var isStart = confirm("Начать игру?");
-  if(isStart) startGame();
-};
+function shouldAskToStartGame() {
+  return (typeof window === 'undefined' || !window.__GAME_DISABLE_AUTOSTART__) &&
+    typeof document !== 'undefined' &&
+    !document.getElementById('mocha');
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', function(){
+    if (!shouldAskToStartGame()) return;
+    const isStart = confirm("Начать игру?");
+    if(isStart) startGame();
+  });
+}

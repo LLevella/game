@@ -4,7 +4,7 @@ class Level{
     this.grid = grid;
     this.actors = actors;
     this.height = grid.length;
-    this.width = Math.max(0, ...grid.map(str => str.length));
+    this.width = grid.reduce((max, row) => Math.max(max, row ? row.length : 0), 0);
     this.status = null;
     this.finishDelay = 1;
   }
@@ -29,25 +29,24 @@ class Level{
   }
 
   obstacleAt (shift, size){
-    if((shift.constructor !== Vector) ||(size.constructor !== Vector))
+    if(!(shift instanceof Vector) || !(size instanceof Vector))
       throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
-			
-    let vAfterShift = size.plus(shift);
-    console.log(shift, vAfterShift);
+
+    const vAfterShift = size.plus(shift);
 		
-		if( Math.floor(shift.y) < 0 || Math.floor(shift.x) < 0|| Math.ceil(vAfterShift.x) > this.width) return 'wall';
+		if( Math.floor(shift.y) < 0 || Math.floor(shift.x) < 0 || Math.ceil(vAfterShift.x) > this.width) return 'wall';
     if ( Math.ceil(vAfterShift.y) > this.height) return 'lava';
 		
 		for(let y = Math.floor(shift.y); y < Math.ceil(vAfterShift.y); y++)
-      for(let x =Math.floor(shift.x); x < Math.ceil(vAfterShift.x); x++)
-					if (this.grid[y][x] !== undefined)
-						return this.grid[y][x];
+      for(let x = Math.floor(shift.x); x < Math.ceil(vAfterShift.x); x++) {
+        const row = this.grid[y] || [];
+					if (row[x] !== undefined)
+						return row[x];
+      }
 					
   }
 
   removeActor(actor){
-    //if((actor === undefined) || (actor.constructor !== Actor)) return;
-  
     let ind = this.actors.indexOf(actor);
     if (ind > -1) this.actors.splice(ind, 1);
   }
@@ -65,7 +64,7 @@ class Level{
       this.status = 'lost';
       return
     }
-    if((aType === 'coin') && (actor.type === 'coin' )){
+    if((aType === 'coin') && actor && (actor.type === 'coin' )){
       this.removeActor(actor);
       if(this.noMoreActors(aType))
         this.status = 'won';

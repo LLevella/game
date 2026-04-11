@@ -2,7 +2,7 @@
 class Actor{
   constructor(position = new Vector(0,0), size = new Vector(1,1), speed = new Vector(0,0)){
 
-    if((position.constructor !== Vector) ||(size.constructor !== Vector)||(speed.constructor !== Vector))
+    if(!(position instanceof Vector) || !(size instanceof Vector) || !(speed instanceof Vector))
       throw Error("Ошибка приведения типов, переданный объект не является вектором типа Vector");
     
     this.pos = position;
@@ -35,7 +35,7 @@ class Actor{
 
   isIntersect(actor){
     if (!(actor instanceof Actor) || !actor) {
-      throw new Error(`В качестве аргумента можно передавать только вектор типа Vector`);
+      throw new Error(`В качестве аргумента можно передавать только объект типа Actor`);
     }
 
     if (actor === this) {
